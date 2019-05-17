@@ -1,0 +1,16 @@
+<dialog class='nes-dialog is-rounded' id='dialog-contact'>
+  <form method='dialog'>
+    <i class='nes-icon twitter is-medium'></i>
+    <i class='nes-icon github is-medium'></i>
+    <i class='nes-icon gmail is-medium'></i>
+    <i class='nes-icon linkedin is-medium'></i>
+    <menu class='dialog-menu'>
+      <button class='nes-btn'>Close</button>
+    </menu>
+  </form>
+</dialog>
+
+<script>
+  document.getElementById('menu-contact').onclick = function(_)
+    { document.getElementById('dialog-contact').showModal(); }
+</script>

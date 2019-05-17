@@ -1,0 +1,35 @@
+<dialog class='nes-dialog is-rounded' id='dialog-about'>
+  <form method='dialog'>
+    <p>
+      Hacking is something that I've been fond of ever since I discovered the
+      internet back in 1999.
+
+      At that time, my first - somewhat technical - hacking attempt involved
+      cloning the Yahoo! Mail page, changing the form method from POST to GET,
+      setting it as start page at computers from internet cafés and later coming
+      back and checking the browser history.
+    </p>
+
+      <p>
+        Recently, after 7 years of
+        <a href='http://shotgundebugging.blogspot.com/' target='_blank'>
+          working as a web developer</a> I decided it was
+        time for a sabbatical. I started exploring new things and ended up
+        trying bug bounties. I enjoyed the thrill of it and decided web security
+        was something worth digging deeper into. So here it is.
+      </p>
+    <p>
+      Trivia: <em>Securist</em> was the name given to agents of the
+      <a href='https://en.wikipedia.org/wiki/Securitate' target='_blank'>secret police of the
+        Socialist Republic of Romania</a>.
+    </p>
+    <menu class='dialog-menu'>
+      <button class='nes-btn'>Close</button>
+    </menu>
+  </form>
+</dialog>
+
+<script>
+  document.getElementById('menu-about').onclick = function(_)
+    { document.getElementById('dialog-about').showModal(); }
+</script>
