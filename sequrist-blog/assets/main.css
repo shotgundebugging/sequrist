@@ -1,0 +1,51 @@
+body {
+  display: grid;
+  grid-template-columns: 10% [main] 80% 10%;
+  grid-template-rows: 5px [header] 100px 5px [nav] 100px 5px [content] auto;
+  /* background-color: black; */
+}
+
+header {
+  grid-column: main;
+  grid-row: header;
+  background-color: #5555ff;
+}
+
+nav {
+  grid-column: main;
+  grid-row: nav;
+  background-color: #5555ff;
+}
+
+h1 {
+  font-family: 'Press Start 2P';
+  text-align: center;
+  color: #00aaaa;
+  text-shadow: 1px 1px #fff;
+  padding-bottom: 5px;
+}
+
+h1 img {
+  vertical-align: top;
+}
+
+main {
+  grid-column: main;
+  grid-row: content;
+}
+
+a.nes-btn:hover {
+  text-decoration: none;
+}
+
+form {
+  max-width: 550px;
+}
+
+ul {
+  list-style-image: url(/assets/hacker.png);
+}
+
+p {
+  font-family: 'Roboto', sans-serif;
+}

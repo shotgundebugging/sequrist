@@ -10,14 +10,15 @@
       back and checking the browser history.
     </p>
 
-      <p>
-        Recently, after 7 years of
-        <a href='http://shotgundebugging.blogspot.com/' target='_blank'>
-          working as a web developer</a> I decided it was
-        time for a sabbatical. I started exploring new things and ended up
-        trying bug bounties. I enjoyed the thrill of it and decided web security
-        was something worth digging deeper into. So here it is.
-      </p>
+    <p>
+      Recently, after 7 years of
+      <a href='http://shotgundebugging.blogspot.com/' target='_blank'>
+        working as a web developer</a> I decided it was
+      time for a sabbatical. I started exploring new things and ended up
+      trying bug bounties. I enjoyed the thrill of it and decided web security
+      was something worth digging deeper into. So here it is.
+    </p>
+
     <p>
       Trivia: <em>Securist</em> was the name given to agents of the
       <a href='https://en.wikipedia.org/wiki/Securitate' target='_blank'>secret police of the
@@ -30,6 +31,9 @@
 </dialog>
 
 <script>
+  var dialogAbout = document.getElementById('dialog-about');
+  dialogPolyfill.registerDialog(dialogAbout);
+
   document.getElementById('menu-about').onclick = function(_)
     { document.getElementById('dialog-about').showModal(); }
 </script>
