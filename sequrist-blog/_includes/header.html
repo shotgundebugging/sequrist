@@ -14,3 +14,17 @@
   <a id='menu-about' class='nes-btn is-warning'>About</a>
   <a id='menu-contact' class='nes-btn is-warning'>Contact</a>
 </nav>
+
+<script>
+  var dialogAbout = document.getElementById('dialog-about');
+  dialogPolyfill.registerDialog(dialogAbout);
+
+  document.getElementById('menu-about').onclick = function(_)
+    { document.getElementById('dialog-about').showModal(); }
+
+  var dialogContact = document.getElementById('dialog-contact');
+  dialogPolyfill.registerDialog(dialogContact);
+
+  document.getElementById('menu-contact').onclick = function(_)
+    { document.getElementById('dialog-contact').showModal(); }
+</script>

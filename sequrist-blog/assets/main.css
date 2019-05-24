@@ -1,7 +1,7 @@
 body {
   display: grid;
   grid-template-columns: 10% [main] 80% 10%;
-  grid-template-rows: 5px [header] 100px 5px [nav] 100px 5px [content] auto;
+  grid-template-rows: 15px [header] minmax(100px, auto) 5px [nav] minmax(100px, auto) 5px [content] auto 15px;
   /* background-color: black; */
 }
 
@@ -29,6 +29,10 @@ h1 img {
   vertical-align: top;
 }
 
+h2 {
+  font-size: 106%;
+}
+
 main {
   grid-column: main;
   grid-row: content;
@@ -42,10 +46,24 @@ form {
   max-width: 550px;
 }
 
-ul {
+#list-posts {
   list-style-image: url(/assets/hacker.png);
 }
 
 p {
   font-family: 'Roboto', sans-serif;
+}
+
+.post, article {
+  max-width: 680px;
+}
+
+article img {
+  width: 100%;
+  height: auto;
+}
+
+code {
+  font-size: 88%;
+  vertical-align: middle;
 }

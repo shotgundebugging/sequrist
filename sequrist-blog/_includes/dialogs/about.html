@@ -29,11 +29,3 @@
     </menu>
   </form>
 </dialog>
-
-<script>
-  var dialogAbout = document.getElementById('dialog-about');
-  dialogPolyfill.registerDialog(dialogAbout);
-
-  document.getElementById('menu-about').onclick = function(_)
-    { document.getElementById('dialog-about').showModal(); }
-</script>
