@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Exploring An Application's Past & Future"
-date: 2019-05-10 23:50:25 +0300
+date: 2019-05-06
 categories: blog
 ---
 

@@ -7,6 +7,11 @@ layout: default
     {% for post in site.posts %}
       <li class='post'>
         <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+        <div class='nes-badge'>
+          <span class='is-warning'>
+            {{ post.date | date: "%d-%m-%y" }}
+          </span>
+        </div>
         <p class='excerpt'>{{ post.excerpt }}</p>
         <a href="{{ post.url }}">
           <div class='right'>

@@ -10,10 +10,15 @@
         <h3 class='title'>Blog</h3>
         <article>
           <h1>{{ page.title }}</h2>
+          <div class='nes-badge'>
+            <span class='is-warning'>
+              {{ page.date | date: "%d-%m-%y" }}
+            </span>
+          </div>
 
           {{ content }}
 
-          <a href="/">
+          <a href='/'>
             <div class='right'>
               <i class='nes-jp-logo'></i>
               back to blog
