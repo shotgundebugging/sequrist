@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-05-25T18:44:43+03:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Your awesome title</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><entry><title type="html">Exploring An Application’s Past &amp;amp; Future</title><link href="http://localhost:4000/blog/exploring-an-applications-past-and-future.html" rel="alternate" type="text/html" title="Exploring An Application's Past &amp; Future" /><published>2019-05-06T00:00:00+03:00</published><updated>2019-05-06T00:00:00+03:00</updated><id>http://localhost:4000/blog/exploring-an-applications-past-and-future</id><content type="html" xml:base="http://localhost:4000/blog/exploring-an-applications-past-and-future.html">&lt;p&gt;Years ago, when I started building web applications I would simplistically imagine them as a 2D graph of assets. It didn’t take long before I started running into race conditions, time zone discrepancies and caching issues, which made me become aware of the crucial dimension of time in which an application evolves. As I started becoming familiarized with security issues, I realized that vulnerabilities often occur at the boundaries of an application’s assets, where references to past/future assets (subdomains, links, libraries, 3rd party services etc) are often left dangling, outdated or become actual vulnerabilities themselves. What follows are some findings I stumbled upon while keeping this perspective in mind.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;digging-up-the-past&quot;&gt;Digging up the past&lt;/h2&gt;
+
+&lt;p&gt;I found that &lt;a href=&quot;http://web.archive.org/&quot;&gt;The Wayback Machine&lt;/a&gt; from Archive.org is a great tool for quickly surveying the public assets of a domain, allowing anyone to browse historical snapshots.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://lh3.googleusercontent.com/CPFx99xbknwUIrSKl_o0Hely6cqddzlLLk2dwQO4NCtrsBfZ4eLx31o6f7AxQMsVRmkLJL5M0gvOfsJOta1QbYrd0-9S1n0fr7IVMLOQd-B-tphmPkf8kLXQjIxo6I76aT11dl3I&quot; alt=&quot;&quot; title=&quot;The Wayback Machine sitemap viewer&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The viewer groups the site by years and shows all assets in radial-tree graph&lt;/p&gt;
+
+&lt;p&gt;The center circle is the domain, while the successive rings dig recursively into the directory structure. Naturally, not only the content is archived, but also things like JavaScript code, parameters and comments. On the visual sitemap explorer the juicy stuff can be found on the outer-most rings, which reveal actual files and a range of parameters.
+The image above reveals a &lt;code class=&quot;highlighter-rouge&quot;&gt;?pagename=&lt;/code&gt; parameter, which already hints to &lt;a href=&quot;https://labs.detectify.com/2012/11/16/local-file-inclusions-in-perlcgi/&quot;&gt;local file inclusion vulnerability&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/tomnomnom/waybackurls&quot;&gt;Waybackurls&lt;/a&gt; is a tool for quickly fetching URLs from the Wayback Machine, which can give a feel of how the application is built.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/posts/1/waybackurls.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Although mostly used for fuzzing, I like &lt;a href=&quot;https://wfuzz.readthedocs.io/en/latest/&quot;&gt;wfuzz&lt;/a&gt; because of it’s nicely structured output. This scan quickly reveals which URLs are still available, 404s and redirects, already hinting at some potential attacks&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/posts/1/wfuzzed.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;For more a more in-depth perspective, &lt;a href=&quot;https://github.com/hartator/wayback-machine-downloader&quot;&gt;wayback_machine_downloader&lt;/a&gt; can be used to fetch a copy of all the historical snapshots of a website.&lt;/p&gt;
+
+&lt;p&gt;An interesting find: emails &amp;amp; reset password links.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://lh6.googleusercontent.com/JgD5dEoWoFO4hd9EmJ7nl4_XZ-3tMChuFSlp0AbrlR3dStlxgMEL6g80U0Znu_D2glxWCOx36K0-m56jep6e-Uw2l4BJbDZ3_GOsOJdLwby67BZJvU8xTYrfsr8ZJskCXydVqhJL&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;…and activation links.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://lh6.googleusercontent.com/vHHSTSHS9tgasYO4zCC0JnB5yfy4lu50gbtCwi6hFpJtvMzl6sOiQOCxjEVD2pHAh60CyNWZh3qPWmV8KYzfi6duelWkgD6WS_DMCIyc-8Rq7y6v2txixBogjD0gBiOs6BIuUCoR&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://hackerone.com/reports/43807&quot;&gt;Password reset&lt;/a&gt; and activation links get indexed by crawlers or get &lt;a href=&quot;https://hackerone.com/reports/303322&quot;&gt;leaked to 3rd parties&lt;/a&gt; via the Referrer header and, to make matters worse, expiration policies vary from framework to framework or has &lt;a href=&quot;https://hackerone.com/reports/118948&quot;&gt;bugs&lt;/a&gt;, so they can occasionally be reused. Image 3 also reveals user emails which can facilitate a &lt;a href=&quot;https://blog.detectify.com/2016/10/20/how-to-identify-a-phishing-email/&quot;&gt;targeted phishing campaign&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Wayback Machine also stores error pages and redirects; 40* and 50* pages can provide insight into the configuration of the application’s stack while 30* redirects, conveniently highlighted, open the way to potential &lt;a href=&quot;https://labs.detectify.com/2014/10/21/hostile-subdomain-takeover-using-herokugithubdesk-more/&quot;&gt;subdomain takeovers&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://lh3.googleusercontent.com/jypQv0LcPCfkZq7VJRlzYE1RyBL7ATlJ8EU3LsCL8WJbBy02sRCBVZRosMsMPixA8De8pbfV6NfW1mexDCNoeEBlj3VNakTTf9tqByJKGUCeSmIY3LvCw0q28Mt85aJx2sY6V591&quot; alt=&quot;&quot; title=&quot;Current error page vs. Error page from Wayback Machine&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Comparing different versions of error pages can reveal when an application’s infrastructure has changed.&lt;/p&gt;
+
+&lt;p&gt;Modern web frameworks &lt;a href=&quot;https://guides.rubyonrails.org/asset_pipeline.html#what-is-fingerprinting-and-why-should-i-care-questionmark&quot;&gt;concatenate, minify and fingerprint assets&lt;/a&gt; for performance and caching purposes. This can sometimes make it hard to spot changes made to client-side code. Since it’s easy to get a list of all previously generated assets from The Wayback Machine, it becomes easy to spot different versions of the same file based on their file size.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://lh5.googleusercontent.com/voD4mMrSi3GPOat_nT0oiwc0YsGg5vB-wlEY6rp5hbM4HuLOVox3MMmHopLnB_0aiCfEGUcn9A5UzBKJaxxe5fhdEI1M7LfUNh1dchfyzApPUAIAyIwLZtFHjbtPzOVn05J37qLL&quot; alt=&quot;&quot; title=&quot;Listing all historical JS assets, sorted by size&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Even though their names are obscure, similar sizes point to the same files.&lt;/p&gt;
+
+&lt;h2 id=&quot;learning-from-others-mistakes&quot;&gt;Learning from others mistakes&lt;/h2&gt;
+
+&lt;p&gt;“The future is already here — it’s just not very evenly distributed” claims William Gibson, the sci-fi author who also coined the term “cyberspace”. While the quote can be dismissed as abstract, the reality in software development is that incomplete features often get released to production - both intentional and unintentionally. Some of these features quickly get reverted. But these reversals are not always atomic operations. Artefacts get left behind, i.e. &lt;a href=&quot;https://cwe.mitre.org/data/definitions/615.html&quot;&gt;comments&lt;/a&gt;, which can be a treasure-trove of development credentials, sensitive links, library versions, &lt;a href=&quot;https://labs.detectify.com/2018/08/02/bypassing-exploiting-bucket-upload-policies-signed-urls/&quot;&gt;S3 buckets&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In order to safely deploy features according to a marketing timeline feature flags are used, which provide the opportunity to test the features incrementally to selected audiences, in case anything breaks. Feature flags is why many unreleased features from popular products become &lt;a href=&quot;https://www.bbc.com/news/technology-47630849&quot;&gt;leaked&lt;/a&gt; to the public long before their official launch. Giants like Facebook &amp;amp; Google &lt;a href=&quot;https://tech.co/news/the-dark-launch-how-googlefacebook-release-new-features-2016-04&quot;&gt;implement their own feature flag service&lt;/a&gt;, while other websites used &lt;a href=&quot;https://rollout.io/blog/started-quickly-javascript-feature-flags/&quot;&gt;3rd party services&lt;/a&gt;. Building on what we have explored until now, we can get insight into how a feature flag implementation may evolve.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://lh5.googleusercontent.com/un6V3QsKKQ4QPxSG5mS_klUZW-lwHIYwtUVDFePqq5ceRuyj6W2QojQ8rMBnVsJNgBchijU3HTOIG0QFdpU_dPBnDCiKiYee52ZbBWWZFb4Spwg_xULy_s9GYSo4FY6v242eNgfl&quot; alt=&quot;&quot; title=&quot;Diffing 2 versions of a JavaScript file reveals how the feature flag implementation has changed&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The initial implementation is importing a local config file, while the newer implementation if fetching the configuration with an AJAX call to an external service.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-future-becomes-the-past&quot;&gt;The future becomes the past&lt;/h2&gt;
+
+&lt;p&gt;In the context of web application security, an assumption I sometimes find myself making is that once a security issue is fixed, things tend to move forward and that class of bugs will not surface again. This, ofcourse, is false. From my previous work in web development, conscious and consistent effort has to be put into setting up proper testing and maintaining code quality. A high code coverage percentage is  the pride and joy of any seasoned developer, but that doesn’t prevent security bugs from sipping through.&lt;/p&gt;
+
+&lt;p&gt;A recent &lt;a href=&quot;https://www.youtube.com/watch?v=lG7U3fuNw3A&quot;&gt;XSS was made possible in Google Search&lt;/a&gt; because the sanitizer was modified – essentially becoming more lenient – because of interface design issues.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://lh4.googleusercontent.com/srpcLSJaEAUHE3HuZ1KgDbO-7CKSVVv4_XVYfZyAc0Mux7cMbnvjWnjs6jKwTW8HpztKpZebbvF_PtcWv77hwPlR3RykebcscEZUhAMlmDF8pVqM6FZpfdLuS0zR23SR74Ie5jO5&quot; alt=&quot;&quot; title=&quot;XSS trigger in Google Search&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Since &lt;a href=&quot;https://github.com/google/closure-library&quot;&gt;Google’s frontend is open source&lt;/a&gt;, we can take a look at what exactly happened.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://lh3.googleusercontent.com/jnlLdLGjaMOFC00AvMgVhNyLI9j4oW5V0AYi8688rlnyCyjM-onG03wC2N6bZN2aj9JhNuzKEVvi9keFSUSDNG_0ZC5rCIgAkSvfwG88UCQffeqJmWDzFsmI8Ho9trpQNrWUI6X2&quot; alt=&quot;&quot; title=&quot;Commit which introduced the vulnerability&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The commit message for the fix notes that tests were added and updated. While automated tests vouch for a programmer’s correctness at the level at which the test was introduced (unit, integration, system) and guard against violations of the application’s architecture and business logic, they do not always vouch for the overall security of the application.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://lh4.googleusercontent.com/leX0ncR409vk4gvsSiASDXpD-crIkNg0_wWVtKhyMkc0vnYhHseY0B-vwuQIYs0hcwzpgm-_0UZD4-wA2q_YP1YHf14LKPmy_z7i3Xn68hWY1E6PswE-e5muOzyFbxA9Fsok9_DL&quot; alt=&quot;&quot; title=&quot;Commit which fixes the vulnerability&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We can see that the fix is actually a rollback, essentially bringing the code to a previous point in time.&lt;/p&gt;
+
+&lt;p&gt;To sum it up, application code moves back and forth, inherently producing side effects which can be exploited. Hacking is about finding the right time to act… and the right time to stop.&lt;/p&gt;</content><author><name></name></author><summary type="html">Years ago, when I started building web applications I would simplistically imagine them as a 2D graph of assets. It didn’t take long before I started running into race conditions, time zone discrepancies and caching issues, which made me become aware of the crucial dimension of time in which an application evolves. As I started becoming familiarized with security issues, I realized that vulnerabilities often occur at the boundaries of an application’s assets, where references to past/future assets (subdomains, links, libraries, 3rd party services etc) are often left dangling, outdated or become actual vulnerabilities themselves. What follows are some findings I stumbled upon while keeping this perspective in mind.</summary></entry><entry><title type="html">Cat tail! More or less</title><link href="http://localhost:4000/blog/cat-tail-more-less.html" rel="alternate" type="text/html" title="Cat tail! More or less" /><published>2019-04-06T00:00:00+03:00</published><updated>2019-04-06T00:00:00+03:00</updated><id>http://localhost:4000/blog/cat-tail-more-less</id><content type="html" xml:base="http://localhost:4000/blog/cat-tail-more-less.html">&lt;p&gt;I’ve been using &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt; for ages to display contents of files. I used it very rarely to actually concatenate files together.
+A few years ago, &lt;a href=&quot;http://www.openwall.com/lists/oss-security/2015/09/17/5&quot;&gt;it was revealed&lt;/a&gt; that &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt; interprets escaped sequences. If you’ve been doing any kind of security work, you know how that can turn bad.
+I’ve already been using &lt;code class=&quot;highlighter-rouge&quot;&gt;tail -f&lt;/code&gt; to follow logs, since I started doing web development. I always had the problem that I wanted to scroll back but, as new items were added, it would automatically scroll me back to the end of the file.
+At one point I stumbled upon &lt;a href=&quot;https://www.linux.com/community/blogs/129-servers/30056&quot;&gt;a good alternative&lt;/a&gt;, namely using &lt;code class=&quot;highlighter-rouge&quot;&gt;less +F&lt;/code&gt;. I loved that you can switch between examine (&lt;code class=&quot;highlighter-rouge&quot;&gt;^C&lt;/code&gt;) and follow mode (⇧&lt;code class=&quot;highlighter-rouge&quot;&gt;F&lt;/code&gt;).&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;head&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;tail&lt;/code&gt; &amp;amp; &lt;code class=&quot;highlighter-rouge&quot;&gt;more&lt;/code&gt; also interpret escaped sequences. Good news is that you can ditch &lt;code class=&quot;highlighter-rouge&quot;&gt;head&lt;/code&gt; and use &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; in combination with it’s LINES option.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;env LINES=10 less file.txt&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Here’s a cool use case for &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; let’s say you have a directory of text files and you quickly want to skim through them.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ls | xargs less --prompt=%x --squeeze-blank-lines&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;You can navigate with &lt;code class=&quot;highlighter-rouge&quot;&gt;:n&lt;/code&gt; to the next file and use &lt;code class=&quot;highlighter-rouge&quot;&gt;--prompt&lt;/code&gt; to see the name of the next file which &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; will open. Prompts are cool, you can use them to display line number, percentage of how much you read from the file, percentage of how many of the files you went through.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;man&lt;/code&gt; also uses &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; so learning it’s tricks is a great way to speed up navigating the UNIX documentation.&lt;/p&gt;
+
+&lt;p&gt;When using &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; to read documentation to can jump to a certain chapter by using the &lt;code class=&quot;highlighter-rouge&quot;&gt;--pattern&lt;/code&gt; option.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;less --help | less --pattern=MOVING&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;The above will display the&lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; docs starting with the section on “MOVING.”&lt;/p&gt;
+
+&lt;p&gt;And finally, as I found out from &lt;a href=&quot;https://www.destroyallsoftware.com/screencasts/catalog/pretty-git-logs&quot;&gt;Gary Bernhardt&lt;/a&gt;, using &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; is also great for doing pretty pagination.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;echo long_file.txt | less -FXRS&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Let’s break this apart:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-F&lt;/code&gt; tells &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; not to page if it doesn’t have more than one page.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-X&lt;/code&gt; doesn’t clear the screen after exiting.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-R&lt;/code&gt; is for passing color codes through.&lt;/li&gt;
+  &lt;li&gt;And finally &lt;code class=&quot;highlighter-rouge&quot;&gt;-S&lt;/code&gt; which chops long lines.&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">I’ve been using cat for ages to display contents of files. I used it very rarely to actually concatenate files together. A few years ago, it was revealed that cat interprets escaped sequences. If you’ve been doing any kind of security work, you know how that can turn bad. I’ve already been using tail -f to follow logs, since I started doing web development. I always had the problem that I wanted to scroll back but, as new items were added, it would automatically scroll me back to the end of the file. At one point I stumbled upon a good alternative, namely using less +F. I loved that you can switch between examine (^C) and follow mode (⇧F).</summary></entry></feed>

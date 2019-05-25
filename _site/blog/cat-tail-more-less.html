@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto:500&display=swap' rel='stylesheet'>
+  <link href='https://unpkg.com/nes.css@latest/css/nes.min.css' rel='stylesheet' />
+  <link href='/assets/main.css' rel='stylesheet' />
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.5.0/dialog-polyfill.js'></script>
+
+  <title>SEQURIST - A developer's adventures through the world of web security</title>
+</head>
+
+
+  <body>
+    <header class='nes-container is-rounded'>
+  <h1>
+    <img src='/assets/shield.png'>
+    SEQURIST
+    <img src='/assets/shield.png'>
+  </h1>
+
+  <dialog class='nes-dialog is-rounded' id='dialog-about'>
+  <form method='dialog'>
+    <p>
+      Hacking is something that I've been fond of ever since I discovered the
+      internet back in 1999.
+
+      At that time, my first - somewhat technical - hacking attempt involved
+      cloning the Yahoo! Mail page, changing the form method from POST to GET,
+      setting it as start page at computers from internet cafés and later coming
+      back and checking the browser history.
+    </p>
+
+    <p>
+      Recently, after 7 years of
+      <a href='http://shotgundebugging.blogspot.com/' target='_blank'>
+        working as a web developer</a> I decided it was
+      time for a sabbatical. I started exploring new things and ended up
+      trying bug bounties. I enjoyed the thrill of it and decided web security
+      was something worth digging deeper into. So here it is.
+    </p>
+
+    <p>
+      Trivia: <em>Securist</em> was the name given to agents of the
+      <a href='https://en.wikipedia.org/wiki/Securitate' target='_blank'>secret police of the
+        Socialist Republic of Romania</a>.
+    </p>
+    <menu class='dialog-menu'>
+      <button class='nes-btn'>Close</button>
+    </menu>
+  </form>
+</dialog>
+
+  <dialog class='nes-dialog is-rounded' id='dialog-contact'>
+  <form method='dialog'>
+    <a href="#"></a>
+    <a href='https://twitter.com/shotgundebuggin' target='_blank'>
+      <i class='nes-icon twitter is-medium'></i>
+    </a>
+    <a href='https://github.com/shotgundebugging' target='_blank'>
+      <i class='nes-icon github is-medium'></i>
+    </a>
+    <a href='mailto::um0215&#x40;protonmail&#x2E;ch' target='_blank'>
+      <i class='nes-icon gmail is-medium'></i>
+    </a>
+
+    <a href='https://www.linkedin.com/in/mircea-mare-10413954/' target='_blank'>
+      <i class='nes-icon linkedin is-medium'></i>
+    </a>
+    <menu class='dialog-menu'>
+      <button class='nes-btn'>Close</button>
+    </menu>
+  </form>
+</dialog>
+
+</header>
+
+<nav class='nes-container is-rounded'>
+  <a href='/' class='nes-btn is-warning'>Blog</a>
+  <a id='menu-about' class='nes-btn is-warning'>About</a>
+  <a id='menu-contact' class='nes-btn is-warning'>Contact</a>
+</nav>
+
+<script>
+  var dialogAbout = document.getElementById('dialog-about');
+  dialogPolyfill.registerDialog(dialogAbout);
+
+  document.getElementById('menu-about').onclick = function(_)
+    { document.getElementById('dialog-about').showModal(); }
+
+  var dialogContact = document.getElementById('dialog-contact');
+  dialogPolyfill.registerDialog(dialogContact);
+
+  document.getElementById('menu-contact').onclick = function(_)
+    { document.getElementById('dialog-contact').showModal(); }
+</script>
+
+
+    <main>
+      <section class='nes-container is-rounded with-title'>
+        <h3 class='title'>Blog</h3>
+        <article>
+          <h1>Cat tail! More or less</h2>
+          <div class='nes-badge'>
+            <span class='is-warning'>
+              06-04-19
+            </span>
+          </div>
+
+          <p>I’ve been using <code class="highlighter-rouge">cat</code> for ages to display contents of files. I used it very rarely to actually concatenate files together.
+A few years ago, <a href="http://www.openwall.com/lists/oss-security/2015/09/17/5">it was revealed</a> that <code class="highlighter-rouge">cat</code> interprets escaped sequences. If you’ve been doing any kind of security work, you know how that can turn bad.
+I’ve already been using <code class="highlighter-rouge">tail -f</code> to follow logs, since I started doing web development. I always had the problem that I wanted to scroll back but, as new items were added, it would automatically scroll me back to the end of the file.
+At one point I stumbled upon <a href="https://www.linux.com/community/blogs/129-servers/30056">a good alternative</a>, namely using <code class="highlighter-rouge">less +F</code>. I loved that you can switch between examine (<code class="highlighter-rouge">^C</code>) and follow mode (⇧<code class="highlighter-rouge">F</code>).</p>
+
+<!--more-->
+
+<p><code class="highlighter-rouge">head</code>, <code class="highlighter-rouge">tail</code> &amp; <code class="highlighter-rouge">more</code> also interpret escaped sequences. Good news is that you can ditch <code class="highlighter-rouge">head</code> and use <code class="highlighter-rouge">less</code> in combination with it’s LINES option.</p>
+
+<p><code class="highlighter-rouge">env LINES=10 less file.txt</code></p>
+
+<p>Here’s a cool use case for <code class="highlighter-rouge">less</code> let’s say you have a directory of text files and you quickly want to skim through them.</p>
+
+<p><code class="highlighter-rouge">ls | xargs less --prompt=%x --squeeze-blank-lines</code></p>
+
+<p>You can navigate with <code class="highlighter-rouge">:n</code> to the next file and use <code class="highlighter-rouge">--prompt</code> to see the name of the next file which <code class="highlighter-rouge">less</code> will open. Prompts are cool, you can use them to display line number, percentage of how much you read from the file, percentage of how many of the files you went through.</p>
+
+<p><code class="highlighter-rouge">man</code> also uses <code class="highlighter-rouge">less</code> so learning it’s tricks is a great way to speed up navigating the UNIX documentation.</p>
+
+<p>When using <code class="highlighter-rouge">less</code> to read documentation to can jump to a certain chapter by using the <code class="highlighter-rouge">--pattern</code> option.</p>
+
+<p><code class="highlighter-rouge">less --help | less --pattern=MOVING</code></p>
+
+<p>The above will display the<code class="highlighter-rouge">less</code> docs starting with the section on “MOVING.”</p>
+
+<p>And finally, as I found out from <a href="https://www.destroyallsoftware.com/screencasts/catalog/pretty-git-logs">Gary Bernhardt</a>, using <code class="highlighter-rouge">less</code> is also great for doing pretty pagination.</p>
+
+<p><code class="highlighter-rouge">echo long_file.txt | less -FXRS</code></p>
+
+<p>Let’s break this apart:</p>
+<ul>
+  <li><code class="highlighter-rouge">-F</code> tells <code class="highlighter-rouge">less</code> not to page if it doesn’t have more than one page.</li>
+  <li><code class="highlighter-rouge">-X</code> doesn’t clear the screen after exiting.</li>
+  <li><code class="highlighter-rouge">-R</code> is for passing color codes through.</li>
+  <li>And finally <code class="highlighter-rouge">-S</code> which chops long lines.</li>
+</ul>
+
+
+          <a href='/'>
+            <div class='right'>
+              <i class='nes-jp-logo'></i>
+              back to blog
+            </div>
+          </a>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+    </footer>
+  </body>
+</html>

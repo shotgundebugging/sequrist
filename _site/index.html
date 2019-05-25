@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto:500&display=swap' rel='stylesheet'>
+  <link href='https://unpkg.com/nes.css@latest/css/nes.min.css' rel='stylesheet' />
+  <link href='/assets/main.css' rel='stylesheet' />
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.5.0/dialog-polyfill.js'></script>
+
+  <title>SEQURIST - A developer's adventures through the world of web security</title>
+</head>
+
+
+  <body>
+    <header class='nes-container is-rounded'>
+  <h1>
+    <img src='/assets/shield.png'>
+    SEQURIST
+    <img src='/assets/shield.png'>
+  </h1>
+
+  <dialog class='nes-dialog is-rounded' id='dialog-about'>
+  <form method='dialog'>
+    <p>
+      Hacking is something that I've been fond of ever since I discovered the
+      internet back in 1999.
+
+      At that time, my first - somewhat technical - hacking attempt involved
+      cloning the Yahoo! Mail page, changing the form method from POST to GET,
+      setting it as start page at computers from internet cafés and later coming
+      back and checking the browser history.
+    </p>
+
+    <p>
+      Recently, after 7 years of
+      <a href='http://shotgundebugging.blogspot.com/' target='_blank'>
+        working as a web developer</a> I decided it was
+      time for a sabbatical. I started exploring new things and ended up
+      trying bug bounties. I enjoyed the thrill of it and decided web security
+      was something worth digging deeper into. So here it is.
+    </p>
+
+    <p>
+      Trivia: <em>Securist</em> was the name given to agents of the
+      <a href='https://en.wikipedia.org/wiki/Securitate' target='_blank'>secret police of the
+        Socialist Republic of Romania</a>.
+    </p>
+    <menu class='dialog-menu'>
+      <button class='nes-btn'>Close</button>
+    </menu>
+  </form>
+</dialog>
+
+  <dialog class='nes-dialog is-rounded' id='dialog-contact'>
+  <form method='dialog'>
+    <a href="#"></a>
+    <a href='https://twitter.com/shotgundebuggin' target='_blank'>
+      <i class='nes-icon twitter is-medium'></i>
+    </a>
+    <a href='https://github.com/shotgundebugging' target='_blank'>
+      <i class='nes-icon github is-medium'></i>
+    </a>
+    <a href='mailto::um0215&#x40;protonmail&#x2E;ch' target='_blank'>
+      <i class='nes-icon gmail is-medium'></i>
+    </a>
+
+    <a href='https://www.linkedin.com/in/mircea-mare-10413954/' target='_blank'>
+      <i class='nes-icon linkedin is-medium'></i>
+    </a>
+    <menu class='dialog-menu'>
+      <button class='nes-btn'>Close</button>
+    </menu>
+  </form>
+</dialog>
+
+</header>
+
+<nav class='nes-container is-rounded'>
+  <a href='/' class='nes-btn is-warning'>Blog</a>
+  <a id='menu-about' class='nes-btn is-warning'>About</a>
+  <a id='menu-contact' class='nes-btn is-warning'>Contact</a>
+</nav>
+
+<script>
+  var dialogAbout = document.getElementById('dialog-about');
+  dialogPolyfill.registerDialog(dialogAbout);
+
+  document.getElementById('menu-about').onclick = function(_)
+    { document.getElementById('dialog-about').showModal(); }
+
+  var dialogContact = document.getElementById('dialog-contact');
+  dialogPolyfill.registerDialog(dialogContact);
+
+  document.getElementById('menu-contact').onclick = function(_)
+    { document.getElementById('dialog-contact').showModal(); }
+</script>
+
+
+    <main>
+      <section class='nes-container is-rounded with-title'>
+  <h3 class='title'>Blog</h3>
+  <ul id='list-posts'>
+    
+      <li class='post'>
+        <h2><a href="/blog/exploring-an-applications-past-and-future.html">Exploring An Application's Past & Future</a></h2>
+        <div class='nes-badge'>
+          <span class='is-warning'>
+            06-05-19
+          </span>
+        </div>
+        <p class='excerpt'><p>Years ago, when I started building web applications I would simplistically imagine them as a 2D graph of assets. It didn’t take long before I started running into race conditions, time zone discrepancies and caching issues, which made me become aware of the crucial dimension of time in which an application evolves. As I started becoming familiarized with security issues, I realized that vulnerabilities often occur at the boundaries of an application’s assets, where references to past/future assets (subdomains, links, libraries, 3rd party services etc) are often left dangling, outdated or become actual vulnerabilities themselves. What follows are some findings I stumbled upon while keeping this perspective in mind.</p>
+
+</p>
+        <a href="/blog/exploring-an-applications-past-and-future.html">
+          <div class='right'>
+            <i class='nes-jp-logo'></i>
+            press to continue...
+          </div>
+        </a>
+      </li>
+    
+      <li class='post'>
+        <h2><a href="/blog/cat-tail-more-less.html">Cat tail! More or less</a></h2>
+        <div class='nes-badge'>
+          <span class='is-warning'>
+            06-04-19
+          </span>
+        </div>
+        <p class='excerpt'><p>I’ve been using <code class="highlighter-rouge">cat</code> for ages to display contents of files. I used it very rarely to actually concatenate files together.
+A few years ago, <a href="http://www.openwall.com/lists/oss-security/2015/09/17/5">it was revealed</a> that <code class="highlighter-rouge">cat</code> interprets escaped sequences. If you’ve been doing any kind of security work, you know how that can turn bad.
+I’ve already been using <code class="highlighter-rouge">tail -f</code> to follow logs, since I started doing web development. I always had the problem that I wanted to scroll back but, as new items were added, it would automatically scroll me back to the end of the file.
+At one point I stumbled upon <a href="https://www.linux.com/community/blogs/129-servers/30056">a good alternative</a>, namely using <code class="highlighter-rouge">less +F</code>. I loved that you can switch between examine (<code class="highlighter-rouge">^C</code>) and follow mode (⇧<code class="highlighter-rouge">F</code>).</p>
+
+</p>
+        <a href="/blog/cat-tail-more-less.html">
+          <div class='right'>
+            <i class='nes-jp-logo'></i>
+            press to continue...
+          </div>
+        </a>
+      </li>
+    
+  </ul>
+</section>
+
+    </main>
+
+    <footer>
+    </footer>
+  </body>
+</html>
