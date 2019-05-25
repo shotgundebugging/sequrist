@@ -39,7 +39,7 @@ An interesting find: emails & reset password links.
 
 ![](https://lh6.googleusercontent.com/vHHSTSHS9tgasYO4zCC0JnB5yfy4lu50gbtCwi6hFpJtvMzl6sOiQOCxjEVD2pHAh60CyNWZh3qPWmV8KYzfi6duelWkgD6WS_DMCIyc-8Rq7y6v2txixBogjD0gBiOs6BIuUCoR)
 
-[Password reset](https://hackerone.com/reports/43807) and activation links get indexed by crawlers or get [leaked to 3rd parties](https://hackerone.com/reports/303322) via the Referrer header and, to make matters worse, expiration policies vary from framework to framework or has [bugs](https://hackerone.com/reports/118948), so they can occasionally be reused. Image 3 also reveals user emails which can facilitate a [targeted phishing campaign](https://blog.detectify.com/2016/10/20/how-to-identify-a-phishing-email/).
+[Password reset](https://hackerone.com/reports/43807) and activation links get indexed by crawlers or get [leaked to 3rd parties](https://hackerone.com/reports/303322) via the Referrer header and, to make matters worse, expiration policies vary from framework to framework or has [bugs](https://hackerone.com/reports/118948), so they can occasionally be reused. Since the image above also reveals user emails, this paves the way for a [targeted phishing campaign](https://blog.detectify.com/2016/10/20/how-to-identify-a-phishing-email/).
 
 The Wayback Machine also stores error pages and redirects; 40* and 50* pages can provide insight into the configuration of the application's stack while 30* redirects, conveniently highlighted, open the way to potential [subdomain takeovers](https://labs.detectify.com/2014/10/21/hostile-subdomain-takeover-using-herokugithubdesk-more/).
 
