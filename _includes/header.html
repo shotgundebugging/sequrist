@@ -1,8 +1,8 @@
 <header class='nes-container is-rounded'>
   <h1>
-    <img src='/assets/shield.png'>
+    <img src="{{ site.url }}/assets/shield.png">
     SEQURIST
-    <img src='/assets/shield.png'>
+    <img src="{{ site.url }}/assets/shield.png">
   </h1>
 
   {% include dialogs/about.html %}
@@ -10,7 +10,7 @@
 </header>
 
 <nav class='nes-container is-rounded'>
-  <a href='/' class='nes-btn is-warning'>Blog</a>
+  <a href="{{ site.url }}" class='nes-btn is-warning'>Blog</a>
   <a id='menu-about' class='nes-btn is-warning'>About</a>
   <a id='menu-contact' class='nes-btn is-warning'>Contact</a>
 </nav>
