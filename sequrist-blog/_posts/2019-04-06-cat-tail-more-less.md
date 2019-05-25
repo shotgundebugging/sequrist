@@ -2,17 +2,15 @@
 layout: post
 title: "Cat tail! More or less"
 date: 2019-05-10 23:50:25 +0300
-categories: jekyll update
+categories: blog
 ---
 
 I've been using `cat` for ages to display contents of files. I used it very rarely to actually concatenate files together.
-And I've been using `tail -f` to follow logs, since I started doing web development. I always had the problem that I wanted to scroll back but, as new items were added, it would automatically scroll me back to the end of the file.
-
-<!--more-->
-
+A few years ago, [it was revealed](http://www.openwall.com/lists/oss-security/2015/09/17/5) that `cat` interprets escaped sequences. If you've been doing any kind of security work, you know how that can turn bad.
+I've already been using `tail -f` to follow logs, since I started doing web development. I always had the problem that I wanted to scroll back but, as new items were added, it would automatically scroll me back to the end of the file.
 At one point I stumbled upon [a good alternative](https://www.linux.com/community/blogs/129-servers/30056), namely using `less +F`. I loved that you can switch between examine (`^C`) and follow mode (⇧`F`).
 
-I was still using `cat` until [the final blow](http://www.openwall.com/lists/oss-security/2015/09/17/5)came and revealed that `cat` interprets escaped sequences. If you've been doing any kind of programming, you know how that can turn bad.
+<!--more-->
 
 `head`, `tail` & `more` also interpret escaped sequences. Good news is that you can ditch `head` and use `less` in combination with it's LINES option.
 

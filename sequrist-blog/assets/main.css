@@ -2,7 +2,6 @@ body {
   display: grid;
   grid-template-columns: 10% [main] 80% 10%;
   grid-template-rows: 15px [header] minmax(100px, auto) 5px [nav] minmax(100px, auto) 5px [content] auto 15px;
-  /* background-color: black; */
 }
 
 header {
@@ -56,6 +55,7 @@ p {
 
 .post, article {
   max-width: 680px;
+  margin-bottom: 30px;
 }
 
 article img {
@@ -66,4 +66,8 @@ article img {
 code {
   font-size: 88%;
   vertical-align: middle;
+}
+
+div.right {
+  text-align: right;
 }
