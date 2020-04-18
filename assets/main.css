@@ -32,9 +32,18 @@ h2 {
   font-size: 106%;
 }
 
+h2 a {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
 main {
   grid-column: main;
   grid-row: content;
+  position: relative;
+  overflow-x: hidden;
 }
 
 a.nes-btn:hover {
@@ -51,6 +60,7 @@ form {
 
 p {
   font-family: 'Roboto', sans-serif;
+  overflow: hidden;
 }
 
 .post, article {
@@ -66,6 +76,11 @@ article img {
 code {
   font-size: 88%;
   vertical-align: middle;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 680px;
 }
 
 div.right {
